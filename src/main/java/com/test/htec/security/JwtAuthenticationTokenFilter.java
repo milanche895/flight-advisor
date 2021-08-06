@@ -19,12 +19,6 @@ import com.test.htec.entity.JwtAuthenticationToken;
 
 public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessingFilter {
 
-	@Autowired
-	MessageSource messageSource;
-	
-	@Autowired
-	EntityManager em;
-	
     public JwtAuthenticationTokenFilter() {
         super("/advisor/auth/**");
     }

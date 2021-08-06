@@ -1,10 +1,16 @@
 package com.test.htec.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -23,6 +29,12 @@ public class City {
 	
 	@Column(name = "description")
 	private String description;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "city_airport",
+        joinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "airport_id", referencedColumnName = "airport_id"))
+	private List<Airport> airportList;
 
 	public Long getId() {
 		return id;
@@ -54,6 +66,14 @@ public class City {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<Airport> getAirportList() {
+		return airportList;
+	}
+
+	public void setAirportList(List<Airport> airportList) {
+		this.airportList = airportList;
 	}
 	
 }

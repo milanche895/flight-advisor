@@ -1,5 +1,7 @@
 package com.test.htec.DTO;
 
+import java.util.List;
+
 import com.test.htec.entity.City;
 
 public class CityDTO {
@@ -11,6 +13,8 @@ public class CityDTO {
 	private String country;
 	
 	private String description;
+	
+	private List<City> cityList;
 	
 	public CityDTO() {
 		
