@@ -58,4 +58,19 @@ public class PermisionSystem {
 			
 		}
 	}
+	public Long checkUserId(String token){
+	String tokenTrims = token.substring(6);
+	
+	Claims claims =
+	(Claims) Jwts.parser()
+    
+	  .setSigningKey("htec") // <----
+	  
+	  .parseClaimsJws(tokenTrims).getBody();
+	
+	claims.get("role");
+	claims.get("id", Integer.class);
+	
+	return 	new Long(claims.get("id", Integer.class));
+	}
 }

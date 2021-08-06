@@ -81,10 +81,5 @@ public class UserServiceImplement implements UserService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please input username and password");
 		}
 	}
-	@Override
-	public List<Route> getAllRoute(){
-		List<Route> routeList = routeRepository.findAll();
-		return routeList;
-	}
 
 }

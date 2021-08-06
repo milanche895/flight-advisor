@@ -31,8 +31,12 @@ public class CityController {
 		return new ResponseEntity<CityDTO>(cityService.newCity(cityDTO, token),HttpStatus.OK);
 	}
 	@PutMapping("/update/airport/{id}")
-	public ResponseEntity<CityDTO> updateCity(@RequestHeader("Authorization") String token, @PathVariable(name = "id") Long id){
-		return new ResponseEntity<CityDTO>(cityService.updateCity(token, id), HttpStatus.OK);
+	public ResponseEntity<CityDTO> updateCityAirportAndRoute(@RequestHeader("Authorization") String token, @PathVariable(name = "id") Long id){
+		return new ResponseEntity<CityDTO>(cityService.updateCityAirportAndRoute(token, id), HttpStatus.OK);
+	}
+	@PutMapping("/update")
+	public ResponseEntity<CityDTO> updateCity(@RequestHeader("Authorization") String token, @RequestBody CityDTO cityDTO){
+		return new ResponseEntity<CityDTO>(cityService.updateCity(cityDTO, token), HttpStatus.OK);
 	}
 	@GetMapping("/all")
 	public ResponseEntity<List<City>> getAllCities(@RequestHeader("Authorization") String token){

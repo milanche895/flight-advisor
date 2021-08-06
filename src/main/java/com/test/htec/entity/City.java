@@ -35,6 +35,12 @@ public class City {
         joinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "airport_id", referencedColumnName = "airport_id"))
 	private List<Airport> airportList;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "city_route",
+        joinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "route_id", referencedColumnName = "id"))
+	private List<Route> routeList;
 
 	public Long getId() {
 		return id;
@@ -74,6 +80,14 @@ public class City {
 
 	public void setAirportList(List<Airport> airportList) {
 		this.airportList = airportList;
+	}
+
+	public List<Route> getRouteList() {
+		return routeList;
+	}
+
+	public void setRouteList(List<Route> routeList) {
+		this.routeList = routeList;
 	}
 	
 }

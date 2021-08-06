@@ -38,12 +38,5 @@ public class PublicController {
 	public ResponseEntity<Token> loginUser(@RequestBody UserDTO userDTO){
 		return new ResponseEntity<Token>(userService.loginUser(userDTO),HttpStatus.OK);
 	}
-	@GetMapping("/route")
-	public ResponseEntity<List<Route>> getAllRoute(){
-		return new ResponseEntity<List<Route>>(userService.getAllRoute(),HttpStatus.OK);
-	}
-	@PostMapping("/newcity")
-	public ResponseEntity<CityDTO> newCity(@RequestBody CityDTO cityDTO, @RequestHeader("Authorization") String token){
-		return new ResponseEntity<CityDTO>(cityService.newCity(cityDTO, token),HttpStatus.OK);
-	}
+
 }

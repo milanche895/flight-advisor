@@ -11,7 +11,5 @@ public interface UserService {
 	Token registrationUser(UserDTO userDTO);
 
 	Token loginUser(UserDTO userDTO);
-
-	public List<Route> getAllRoute();
 	
 }

@@ -12,8 +12,8 @@ public interface CityService {
 
 	List<City> getAllCities(String token);
 
-	List<Airport> getAirlineByCity();
+	CityDTO updateCityAirportAndRoute(String token, Long id);
 
-	CityDTO updateCity(String token, Long id);
+	CityDTO updateCity(CityDTO cityDTO, String token);
 
 }

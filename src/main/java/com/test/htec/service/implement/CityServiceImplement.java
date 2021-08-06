@@ -1,5 +1,7 @@
 package com.test.htec.service.implement;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,8 +15,10 @@ import org.springframework.web.server.ResponseStatusException;
 import com.test.htec.DTO.CityDTO;
 import com.test.htec.entity.Airport;
 import com.test.htec.entity.City;
+import com.test.htec.entity.Route;
 import com.test.htec.repository.AirportRepository;
 import com.test.htec.repository.CityRepository;
+import com.test.htec.repository.RouteRepository;
 import com.test.htec.service.CityService;
 
 @Service
@@ -25,6 +29,9 @@ public class CityServiceImplement implements CityService {
 	
 	@Autowired
 	AirportRepository airportRepository;
+	
+	@Autowired
+	RouteRepository routeRepository;
 	
 	@Autowired
 	PermisionSystem permisionSystem;
@@ -57,7 +64,7 @@ public class CityServiceImplement implements CityService {
 		}
 	}
 	@Override
-	public CityDTO updateCity( String token, Long id) {
+	public CityDTO updateCityAirportAndRoute(String token, Long id) {
 		
 		if (permisionSystem.checkAdministratorAccess(token)) {
 			
@@ -72,6 +79,18 @@ public class CityServiceImplement implements CityService {
 					List<Airport> airportList = airportRepository.findAllByCity(findCity);
 					
 					city.setAirportList(airportList);
+					
+					List<Route> allRouteList = new ArrayList<Route>();
+					
+					for (Airport air : airportList) {
+						String iata = air.getIata().substring(1, air.getIata().length()-1);
+						String icao = air.getIcao().substring(1, air.getIcao().length()-1);
+						List<Route> routeList = routeRepository.findAllBySourceAirportOrDestinationAirport(iata, icao);
+						allRouteList.addAll(routeList);
+						System.out.println(iata);
+						System.out.println(icao);
+					}
+					city.setRouteList(allRouteList);
 					CityDTO cityDTO = new CityDTO(city);
 					
 					cityRepository.save(city);
@@ -82,23 +101,55 @@ public class CityServiceImplement implements CityService {
 				}
 				
 			} else {
-				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED");
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "City not found");
 			}
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "City not found");
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED");
 		}
 		
 	}
 	@Override
+	public CityDTO updateCity(CityDTO cityDTO, String token) {
+		if (permisionSystem.checkAdministratorAccess(token)) {
+			if (Objects.nonNull(cityRepository.findOneById(cityDTO.getId()))) {
+				
+				City city = cityRepository.findOneById(cityDTO.getId());
+				
+				if (Objects.nonNull(cityDTO.getCityName())) {
+					city.setCityName(cityDTO.getCityName());
+				} else {
+					cityDTO.setCityName(city.getCityName());
+				}
+				if (Objects.nonNull(cityDTO.getCountry())) {
+					city.setCountry(cityDTO.getCountry());
+				} else {
+					cityDTO.setCountry(city.getCountry());
+				}
+				if (Objects.nonNull(cityDTO.getDescription())) {
+					city.setDescription(cityDTO.getDescription());
+				} else {
+					cityDTO.setDescription(city.getDescription());
+				}
+				cityDTO.setAirportList(city.getAirportList());
+				cityDTO.setRouteList(city.getRouteList());
+				
+				cityRepository.save(city);
+				
+				return cityDTO;
+				
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "City not found");
+			}
+		} else {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED");
+		}
+	}
+	@Override
 	public List<City> getAllCities(String token){
+		
 		List<City> citiesList = cityRepository.findAll();
 		
 		return citiesList;
 	}
-	@Override
-	public List<Airport> getAirlineByCity(){
-		List<Airport> airlineByCity = airportRepository.findAllByCity("\"Madang\"");
-		
-		return airlineByCity;
-	}
+
 }

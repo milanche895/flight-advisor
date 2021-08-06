@@ -57,9 +57,6 @@ public class Airport {
 	
 	@Column(name = "source")
 	private String source;
-	
-	@ManyToMany(mappedBy = "airportList", cascade = CascadeType.ALL)
-	private Set<City> cities;
 
 	public Long getAirport_id() {
 		return airport_id;
@@ -171,14 +168,6 @@ public class Airport {
 
 	public void setSource(String source) {
 		this.source = source;
-	}
-
-	public Set<City> getCities() {
-		return cities;
-	}
-
-	public void setCities(Set<City> cities) {
-		this.cities = cities;
 	}
 	
 }
