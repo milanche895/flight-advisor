@@ -41,7 +41,6 @@ public class FlightAdvisorConfig extends WebSecurityConfigurerAdapter {
 	    return new BCryptPasswordEncoder();
 	}
 
-	// Enable jdbc authentication
 	@Autowired
 	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder());
@@ -60,12 +59,11 @@ public class FlightAdvisorConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-    //Proverava zahteve sa /rest/
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.cors().and().csrf().disable()
-                .authorizeRequests().antMatchers("**/mybrocki").authenticated()
+                .authorizeRequests().antMatchers("**/advisor").authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(entryPoint)
                 .and()

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.test.htec.DTO.CityDTO;
-import com.test.htec.entity.Airport;
 import com.test.htec.entity.City;
 import com.test.htec.service.CityService;
 

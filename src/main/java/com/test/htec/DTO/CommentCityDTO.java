@@ -2,8 +2,6 @@ package com.test.htec.DTO;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
 import com.test.htec.entity.City;
 import com.test.htec.entity.Comment;
 

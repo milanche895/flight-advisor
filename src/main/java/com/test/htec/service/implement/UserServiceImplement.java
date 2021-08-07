@@ -1,6 +1,5 @@
 package com.test.htec.service.implement;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.test.htec.DTO.UserDTO;
 import com.test.htec.constants.UserTypeEnum;
 import com.test.htec.entity.AdvisorUser;
-import com.test.htec.entity.Route;
 import com.test.htec.entity.Token;
 import com.test.htec.repository.RouteRepository;
 import com.test.htec.repository.UserRepository;
