@@ -19,11 +19,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.test.htec.DTO.CommentCityDTO;
 import com.test.htec.DTO.CommentDTO;
+import com.test.htec.DTO.TravelDTO;
 import com.test.htec.entity.AdvisorUser;
+import com.test.htec.entity.Airport;
 import com.test.htec.entity.City;
 import com.test.htec.entity.Comment;
+import com.test.htec.entity.Route;
+import com.test.htec.repository.AirportRepository;
 import com.test.htec.repository.CityRepository;
 import com.test.htec.repository.CommentRepository;
+import com.test.htec.repository.RouteRepository;
 import com.test.htec.repository.UserRepository;
 import com.test.htec.service.CommentService;
 
@@ -43,6 +48,12 @@ public class CommentServiceImplement implements CommentService {
 	CommentRepository commentRepository;
 	
 	@Autowired
+	AirportRepository airportRepository;
+	
+	@Autowired
+	RouteRepository routeRepository;
+	
+	@Autowired
 	EntityManager em;
 
 	@Override
@@ -58,9 +69,9 @@ public class CommentServiceImplement implements CommentService {
 					City city = cityRepository.findOneById(commentDTO.getCityId());
 					AdvisorUser user = userRepository.findOneById(permisionSystem.checkUserId(token));
 					
-					comment.setCity(city);
+					comment.setCity(city.getId());
 					commentDTO.setCityId(city.getId());
-					comment.setUser(user);
+					comment.setUser(user.getId());
 					commentDTO.setUserId(user.getId());
 					comment.setCommentText(commentDTO.getCommentText());
 					
@@ -85,10 +96,10 @@ public class CommentServiceImplement implements CommentService {
 			if (Objects.nonNull(commentRepository.findOneById(commentDTO.getId()))){
 				Comment comment = commentRepository.findOneById(commentDTO.getId());
 				
-				if (comment.getUser().getId().equals(permisionSystem.checkUserId(token))) {
+				if (comment.getUser().equals(permisionSystem.checkUserId(token))) {
 					comment.setCommentText(commentDTO.getCommentText());
-					commentDTO.setCityId(comment.getCity().getId());
-					commentDTO.setUserId(comment.getUser().getId());
+					commentDTO.setCityId(comment.getCity());
+					commentDTO.setUserId(comment.getUser());
 					
 					commentRepository.save(comment);
 					
@@ -108,7 +119,7 @@ public class CommentServiceImplement implements CommentService {
 		if (permisionSystem.checkRegularUserAccess(token)) {
 			if (Objects.nonNull(commentRepository.findOneById(id))) {
 				Comment comment = commentRepository.findOneById(id);
-				if (comment.getUser().getId().equals(permisionSystem.checkUserId(token))) {
+				if (comment.getUser().equals(permisionSystem.checkUserId(token))) {
 					commentRepository.delete(comment);
 					
 					return "Comment is delete";
@@ -126,15 +137,69 @@ public class CommentServiceImplement implements CommentService {
 	public List<CommentCityDTO> getAllCities(Integer numberComments){
 		List<City> cityList = cityRepository.findAll();
 		List<CommentCityDTO> commentCityList = new ArrayList<CommentCityDTO>();
-		Pageable numberOfComments = PageRequest.of(0, numberComments);
 
 		for (City city : cityList) {
-			CommentCityDTO commentCityDTO = new CommentCityDTO();
-			Page<Comment> commentList = commentRepository.findAll(numberOfComments);
-			commentCityDTO.setCommentList(commentList);
+			CommentCityDTO commentCityDTO = new CommentCityDTO(city);
+			if (Objects.nonNull(numberComments)) {
+				Pageable numberOfComments = PageRequest.of(0, numberComments);
+				List<Comment> commentList = commentRepository.findAllByCityOrderByIdDesc(city.getId(), numberOfComments);
+				commentCityDTO.setCommentList(commentList);
+			} else {
+				List<Comment> commentList = commentRepository.findAllByCityOrderByIdDesc(city.getId());
+				commentCityDTO.setCommentList(commentList);
+			}
 			
 			commentCityList.add(commentCityDTO);
 		}
 		return commentCityList;
 	}
+	@Override
+	public CommentCityDTO getOneByName(String cityName, Integer numberComments){
+		
+		if (Objects.nonNull(cityRepository.findOneByCityName(cityName))) {
+			City city = cityRepository.findOneByCityName(cityName);
+	
+				CommentCityDTO commentCityDTO = new CommentCityDTO(city);
+				if (Objects.nonNull(numberComments)) {
+					Pageable numberOfComments = PageRequest.of(0, numberComments);
+					List<Comment> commentList = commentRepository.findAllByCityOrderByIdDesc(city.getId(), numberOfComments);
+					commentCityDTO.setCommentList(commentList);
+				} else {
+					List<Comment> commentList = commentRepository.findAllByCityOrderByIdDesc(city.getId());
+					commentCityDTO.setCommentList(commentList);
+				}
+	
+			return commentCityDTO;
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "City not found");
+		}
+	}
+	@Override
+	public TravelDTO findCheapestFlight(String sourceCity, String destinationCity) {
+
+		
+		TravelDTO travelDTO = new TravelDTO();
+		
+		travelDTO.setSourceCity(sourceCity);
+		travelDTO.setDestinationCity(destinationCity);
+		
+		if (Objects.nonNull(airportRepository.findOneByCity("\""+sourceCity+"\"")) && Objects.nonNull(airportRepository.findOneByCity("\""+destinationCity+"\""))) {
+		
+			Airport sourceAirport = airportRepository.findOneByCity("\""+sourceCity+"\"");
+			Airport destinationAirport = airportRepository.findOneByCity("\""+destinationCity+"\"");
+			
+			String sourceIata = sourceAirport.getIata().substring(1, sourceAirport.getIata().length()-1);
+			
+			String destinationIata = destinationAirport.getIata().substring(1, destinationAirport.getIata().length()-1);
+			
+			List<Route> routeList = routeRepository.findAllBySourceAirportAndDestinationAirportOrderByPriceAsc(sourceIata, destinationIata);
+			
+			travelDTO.setRouteList(routeList);
+			
+			return travelDTO;
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cities not found");
+		}
+	}
+	
 }

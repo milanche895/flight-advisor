@@ -17,8 +17,8 @@ public class CommentDTO {
 	}
 	public CommentDTO(Comment comment) {
 		this.id = comment.getId();
-		this.userId = comment.getUser().getId();
-		this.cityId = comment.getCity().getId();
+		this.userId = comment.getUser();
+		this.cityId = comment.getCity();
 		this.commentText = comment.getCommentText();
 	}
 	public Long getId() {

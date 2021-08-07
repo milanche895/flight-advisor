@@ -14,5 +14,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long>{
 	
 	Comment findOneById(Long id);
 	
-	Page<Comment> findAll(Pageable page);
+	List<Comment> findAllByCityOrderByIdDesc(Long city, Pageable page);
+	
+	List<Comment> findAllByCityOrderByIdDesc(Long city);
 }

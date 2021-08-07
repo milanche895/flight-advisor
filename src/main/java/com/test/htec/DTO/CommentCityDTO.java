@@ -15,7 +15,7 @@ public class CommentCityDTO {
 	
 	private String description;
 	
-	private Page<Comment> commentList;
+	private List<Comment> commentList;
 	
 	public CommentCityDTO() {
 		
@@ -43,10 +43,10 @@ public class CommentCityDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Page<Comment> getCommentList() {
+	public List<Comment> getCommentList() {
 		return commentList;
 	}
-	public void setCommentList(Page<Comment> commentList2) {
+	public void setCommentList(List<Comment> commentList2) {
 		this.commentList = commentList2;
 	}
 

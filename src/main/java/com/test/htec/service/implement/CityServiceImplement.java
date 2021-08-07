@@ -48,13 +48,17 @@ public class CityServiceImplement implements CityService {
 			
 			if (Objects.nonNull(cityDTO.getCityName()) && Objects.nonNull(cityDTO.getCountry()) && Objects.nonNull(cityDTO.getDescription())){
 				
-				city.setCityName(cityDTO.getCityName());
-				city.setCountry(cityDTO.getCountry());
-				city.setDescription(cityDTO.getDescription());
-				
-				cityRepository.save(city);
-				
-				return cityDTO;
+				if (Objects.isNull(cityRepository.findOneByCityName(cityDTO.getCityName()))) {
+					city.setCityName(cityDTO.getCityName());
+					city.setCountry(cityDTO.getCountry());
+					city.setDescription(cityDTO.getDescription());
+					
+					cityRepository.save(city);
+					
+					return cityDTO;
+				} else {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "City already exist");
+				}
 	
 			} else {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Test");

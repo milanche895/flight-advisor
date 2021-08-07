@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.test.htec.DTO.CommentCityDTO;
 import com.test.htec.DTO.CommentDTO;
+import com.test.htec.DTO.TravelDTO;
 import com.test.htec.service.CommentService;
 
 @RestController
@@ -42,6 +43,14 @@ public class CommentController {
 	@GetMapping("all")
 	public ResponseEntity<List<CommentCityDTO>> getAllCities(@RequestParam(required = false) Integer numberComments){
 		return new ResponseEntity<List<CommentCityDTO>>(commentService.getAllCities(numberComments), HttpStatus.OK);
+	}
+	@GetMapping("city")
+	public ResponseEntity<CommentCityDTO> getAllCities(@RequestParam(required = true) String cityName, @RequestParam(required = false) Integer numberComments){
+		return new ResponseEntity<CommentCityDTO>(commentService.getOneByName(cityName, numberComments), HttpStatus.OK);
+	}
+	@GetMapping("travel")
+	public ResponseEntity<TravelDTO> findCheapestFlight(@RequestParam(required = true) String sourceCity, @RequestParam(required = false) String destinationCity){
+		return new ResponseEntity<TravelDTO>(commentService.findCheapestFlight(sourceCity, destinationCity), HttpStatus.OK);
 	}
 
 }

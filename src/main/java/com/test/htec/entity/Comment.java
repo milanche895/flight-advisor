@@ -17,13 +17,11 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private AdvisorUser user;
+	@Column(name = "user_id")
+	private Long user;
 	
-	@ManyToOne
-	@JoinColumn(name = "city_id")
-	private City city;
+	@Column(name = "city_id")
+	private Long city;
 	
 	@Column(name = "comment_text")
 	private String commentText;
@@ -36,19 +34,19 @@ public class Comment {
 		this.id = id;
 	}
 
-	public AdvisorUser getUser() {
+	public Long getUser() {
 		return user;
 	}
 
-	public void setUser(AdvisorUser user) {
+	public void setUser(Long user) {
 		this.user = user;
 	}
 
-	public City getCity() {
+	public Long getCity() {
 		return city;
 	}
 
-	public void setCity(City city) {
+	public void setCity(Long city) {
 		this.city = city;
 	}
 

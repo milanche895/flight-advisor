@@ -9,5 +9,7 @@ import com.test.htec.entity.City;
 public interface CityRepository extends JpaRepository<City, Long> {
 	
 	public City findOneById(Long id);
+	
+	public City findOneByCityName(String cityName);
 
 }
